@@ -14,6 +14,7 @@ Second, you can control the details of what the script protects access to with t
 * `name`: The user-friendly name to be shown on the initial request for login. If your authorization endpoint supports the h-app microformat, it should also display this name there.
 * `clientID`: The client ID used with the authorization endpoint. This will probably just be the URL of your application.
 * `redirectURI`: The redirect URI used with the authorization endpoint. This can be the URL of any page where this script is active.
+* `requirePermission`: If this is set to a string, the script will require all users to have that permission in order to access the application. If you leave this blank, any user who can sign in at the endpoint can access the application.
 
 ## Setup
 Before you begin, make sure you've downloaded the two libraries listed in the Requirements section. You'll also need to copy `privateauth-access.lua` and `privateauth-access-config.example.lua` somewhere. This guide assumes this path is `/etc/openresty/scripts`, but it can be anywhere.
