@@ -16,7 +16,9 @@ Second, you can control the details of what the script protects access to with t
 * `redirectURI`: The redirect URI used with the authorization endpoint. This can be the URL of any page where this script is active.
 
 ## Setup
-Before you begin, make sure you've downloaded the two libraries listed in the Requirements section. You'll also need to copy `privateauth-access.lua` and `privateauth-access-config.lua` somewhere. This guide assumes this path is `/etc/openresty/scripts`, but it can be anywhere.
+Before you begin, make sure you've downloaded the two libraries listed in the Requirements section. You'll also need to copy `privateauth-access.lua` and `privateauth-access-config.example.lua` somewhere. This guide assumes this path is `/etc/openresty/scripts`, but it can be anywhere.
+
+Make sure to also rename the config file: you should change `privateauth-access-config.example.lua` to `privateauth-access-config.lua`.
 
 First, you need to make some changes to your main OpenResty configuration. You'll want to add the following to your main `http` block:
 ```
@@ -44,7 +46,7 @@ location ^~ /secret {
 	access_by_lua_file /etc/openresty/scripts/privateauth-access.lua;
 }
 ```
-The `$privateauth-slug` variable should correspond to the slug(which you defined in the Configuration section) of the application at this location.
+The `$privateauth-slug` variable should correspond to the slug (which you defined in the Configuration section) of the application at this location.
 
 After that, reload your OpenResty config, and it should be working!
 
