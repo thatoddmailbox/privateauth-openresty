@@ -155,7 +155,8 @@ else
 				code = query["code"]
 			}),
 			headers = {
-				["Content-Type"] = "application/x-www-form-urlencoded"
+				["Content-Type"] = "application/x-www-form-urlencoded",
+				["X-PrivateAuth-Version"] = "1"
 			}
 		})
 		if not res then
@@ -170,13 +171,37 @@ else
 		end
 
 		local endpointResponse = cjson.decode(res.body)
-		if not endpointResponse["me"] then
+		if not endpointResponse["me"] or not endpointResponse["username"] then
 			ngx.print("PrivateAuth endpoint returned invalid response. Authentication failed.")
 			return ngx.exit(ngx.HTTP_OK)
 		end
 
+		if endpointResponse["permissions"] == nil then
+			ngx.print("PrivateAuth endpoint did not return permissions array. Authentication failed.")
+			return ngx.exit(ngx.HTTP_OK)
+		end
+
+		if appInfo.requirePermission ~= "" then
+			local hasPermission = false
+			for _, value in ipairs(endpointResponse["permissions"]) do
+				if appInfo.requirePermission == value then
+					hasPermission = true
+					break
+				end
+			end
+
+			if not hasPermission then
+				ngx.print("You do not have permission to access this application.")
+				return ngx.exit(ngx.HTTP_OK)
+			end
+		end
+
 		session["loggedIn"] = true
 		session["me"] = endpointResponse["me"]
+		session["name"] = endpointResponse["name"]
+		session["shortName"] = endpointResponse["shortName"]
+		session["username"] = endpointResponse["username"]
+		session["permissions"] = endpointResponse["permissions"]
 		set_session_data(sid, session)
 
 		-- we're done! continue to the application
