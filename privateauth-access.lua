@@ -217,12 +217,13 @@ else
 			redirect_uri = appInfo.redirectURI,
 			state = state
 		})
+		ngx.status = ngx.HTTP_FORBIDDEN
 		ngx.print('<div class="h-app">')
 		ngx.print('<h1 class="p-name">' .. appInfo.name .. '</h1>')
 		ngx.print('<div class="p-url" style="display: none">' .. appInfo.clientID .. '</div>')
 		ngx.print('Authentication is required. ')
 		ngx.print('<a href="' .. authURL .. '">Log in</a>')
 		ngx.print('</div>')
-		return ngx.exit(ngx.HTTP_OK)
+		return ngx.exit(ngx.status)
 	end
 end
